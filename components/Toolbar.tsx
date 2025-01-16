@@ -4,6 +4,9 @@ import { RefObject } from "react";
 import { Swatch } from "../utils/Swatch";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
+
+const SCALE = 1.2;
 
 export default function Toolbar(props: {
   canvasRef: RefObject<HTMLCanvasElement | null>;
@@ -70,23 +73,30 @@ export default function Toolbar(props: {
   };
 
   return (
-    <div className="absolute inset-x-0 bottom-0 m-6 mx-auto flex h-16 max-w-2xl items-center justify-center gap-6 rounded-full bg-zinc-900">
-      <div
+    <motion.div
+      className="absolute inset-x-0 bottom-0 m-6 mx-auto flex h-16 max-w-2xl items-center justify-center gap-6 rounded-full bg-zinc-900"
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
         className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-red-500/90"
         onClick={clearCanvas}
+        whileHover={{ scale: SCALE }}
       >
         <Trash2 />
-      </div>
+      </motion.div>
       <div className="flex gap-4">
         {Object.values(Swatch).map((swatch) => (
-          <div
+          <motion.div
             className={`${
               currentSwatch === swatch ? "border-2" : ""
             } h-6 w-6 rounded-lg`}
             style={{ backgroundColor: swatch }}
             key={swatch}
             onClick={() => setCurrentSwatch(swatch)}
-          ></div>
+            whileHover={{ scale: SCALE }}
+          ></motion.div>
         ))}
       </div>
 
@@ -96,17 +106,16 @@ export default function Toolbar(props: {
         max={40}
         value={currentSize}
         onChange={(event) => setCurrentSize(Number(event.target.value))}
-        className="color-zinc-200"
+        className="color-zinc-200 accent-white"
       />
 
-      <div>
-        <div
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-green-500/90"
-          onClick={handleSubmint}
-        >
-          <Check />
-        </div>
-      </div>
-    </div>
+      <motion.div
+        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-green-500/90"
+        onClick={handleSubmint}
+        whileHover={{ scale: SCALE }}
+      >
+        <Check />
+      </motion.div>
+    </motion.div>
   );
 }
