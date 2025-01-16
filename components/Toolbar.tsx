@@ -1,7 +1,7 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import { RefObject } from "react";
-import { Swatch } from "../pages/(utils)/Swatch";
+import { Swatch } from "../utils/Swatch";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 

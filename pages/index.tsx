@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import CanvasElement from "@/components/CanvasElement";
 import Toolbar from "@/components/Toolbar";
-import { Swatch } from "./(utils)/Swatch";
+import { Swatch } from "@/utils/Swatch";
 import { Toaster } from "@/components/ui/toaster";
 import { Spinner } from "@/components/ui/spinner";
 import Latex from "@/components/Latex";
