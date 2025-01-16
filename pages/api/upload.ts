@@ -1,19 +1,24 @@
 import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: true, message: "Method not allowed" });
-    }
-    const { imageData } = req.body;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: true, message: "Method not allowed" });
+  }
+  const { imageData } = req.body;
 
-    if (!imageData) {
-        return res.status(400).json({ error: true, message: "Image data is required" });
-    }
+  if (!imageData) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Image data is required" });
+  }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
 
-    const prompt = `You have been given an image with some mathematical expressions, equations, or graphical problems, and you need to solve them.
+  const prompt = `You have been given an image with some mathematical expressions, equations, or graphical problems, and you need to solve them.
 Note: Use the PEMDAS rule for solving mathematical expressions. PEMDAS stands for the Priority Order: Parentheses, Exponents, Multiplication and Division (from left to right), Addition and Subtraction (from left to right). Parentheses have the highest priority, followed by Exponents, then Multiplication and Division, and lastly Addition and Subtraction.
 
 Examples:
@@ -104,31 +109,31 @@ Additional Guidelines:
 	•	If variables in the expression are pre-assigned, use their values from this dictionary: {dict_of_vars_str}.
 	•	Avoid unnecessary formatting like triple backticks.`;
 
-    try {
-        const response = await axios.post(url, {
-            contents: [
-                {
-                    parts: [
-                        { text: prompt },
-                        {
-                            inline_data: {
-                                mime_type: "image/jpeg",
-                                data: imageData,
-                            },
-                        },
-                    ],
-                },
-            ],
-        });
+  try {
+    const response = await axios.post(url, {
+      contents: [
+        {
+          parts: [
+            { text: prompt },
+            {
+              inline_data: {
+                mime_type: "image/jpeg",
+                data: imageData,
+              },
+            },
+          ],
+        },
+      ],
+    });
 
-        const data = response.data;
+    const data = response.data;
 
-        let text = data.candidates[0].content.parts[0].text;
-        text = text.replace(/```json|```/g, "").trim();
-        text = JSON.parse(text);
+    let text = data.candidates[0].content.parts[0].text;
+    text = text.replace(/```json|```/g, "").trim();
+    text = JSON.parse(text);
 
-        return res.status(200).json(text);
-    } catch (error) {
-        return res.status(500).json({ error: true, message: error });
-    }
+    return res.status(200).json(text);
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error });
+  }
 }
