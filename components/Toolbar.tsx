@@ -1,5 +1,5 @@
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import DoneIcon from "@mui/icons-material/Done";
+import { Trash2 } from "lucide-react";
+import { Check } from "lucide-react";
 import { RefObject } from "react";
 import { Swatch } from "../utils/Swatch";
 import axios from "axios";
@@ -75,7 +75,7 @@ export default function Toolbar(props: {
         className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-red-500/90"
         onClick={clearCanvas}
       >
-        <DeleteOutlineIcon />
+        <Trash2 />
       </div>
       <div className="flex gap-4">
         {Object.values(Swatch).map((swatch) => (
@@ -93,7 +93,7 @@ export default function Toolbar(props: {
       <input
         type="range"
         min={1}
-        max={60}
+        max={40}
         value={currentSize}
         onChange={(event) => setCurrentSize(Number(event.target.value))}
         className="color-zinc-200"
@@ -104,7 +104,7 @@ export default function Toolbar(props: {
           className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-green-500/90"
           onClick={handleSubmint}
         >
-          <DoneIcon />
+          <Check />
         </div>
       </div>
     </div>
