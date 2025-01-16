@@ -1,34 +1,32 @@
-import { useEffect, useRef, useState } from "react";
-import CanvasElement from "./(components)/CanvasElement";
-import Toolbar from "./(components)/Toolbar";
+import { useRef, useState } from "react";
+import CanvasElement from "@/components/CanvasElement";
+import Toolbar from "@/components/Toolbar";
 import { Swatch } from "./(utils)/Swatch";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "@/components/ui/toaster";
+import { Spinner } from "@/components/ui/spinner";
+import Latex from "@/components/Latex";
 
 export default function Home() {
     // const [isProcessing, setIsProcessing] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [currentSwatch, setCurrentSwatch] = useState<Swatch>(Swatch.White);
-    const [currentSize, setCurrentSize] = useState(5);
-    const [loading, setLoading] = useState(false);
-    const [latex, setLatex] = useState("");
-
-    useEffect(() => {
-        console.log(latex);
-    }, [latex]);
+    const [currentSize, setCurrentSize] = useState<number>(5);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [latex, setLatex] = useState<string>("");
 
     return (
         <>
-            <ToastContainer />
+            <Toaster />
             <CanvasElement
                 canvasRef={canvasRef}
                 currentSwatch={currentSwatch}
                 currentSize={currentSize}
-                latex={latex}
             />
+            <Latex canvasRef={canvasRef} latex={latex} />
             {loading && (
-                <div className="absolute inset-0 flex justify-center items-center">
-                    <div className="p-4 bg-zinc-900 text-white rounded-lg">
-                        <h1 className="text-2xl">Processing Image...</h1>
+                <div className="fixed inset-0 bg-black bg-opacity-20 z-[100]">
+                    <div className="absolute inset-0 flex justify-center items-center">
+                        <Spinner size={"large"} />
                     </div>
                 </div>
             )}

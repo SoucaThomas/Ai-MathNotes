@@ -1,9 +1,9 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import { RefObject } from "react";
-import { Swatch } from "../(utils)/Swatch";
-import { toast } from "react-toastify";
+import { Swatch } from "../pages/(utils)/Swatch";
 import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Toolbar(props: {
     canvasRef: RefObject<HTMLCanvasElement | null>;
@@ -24,6 +24,8 @@ export default function Toolbar(props: {
         setLatex,
     } = props;
 
+    const { toast } = useToast();
+
     const handleSubmint = async () => {
         setLoading(true);
         const canvas = canvasRef.current;
@@ -36,25 +38,42 @@ export default function Toolbar(props: {
             })
             .then((res) => res.data);
 
-        console.log(response);
         if (response.error) {
-            toast.error(response.message);
+            // toast.error(response.message);
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: response.message,
+            });
             setLoading(false);
             return;
         }
 
-        setLatex(response[0].expr);
+        console.log(response);
+
+        if (response[0].assign == true || response[0].result) {
+            setLatex(response[0].result.toString());
+        } else
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description:
+                    "Unable to solve the given input. Please check the format or content of the problem.",
+            });
         setLoading(false);
     };
+
+    const clearCanvas = () => {
+        canvasRef.current?.getContext("2d")?.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        setLatex("");
+    };
+
     return (
         <div className="bg-zinc-900 absolute mx-auto inset-x-0 bottom-0 h-16 m-6 max-w-4xl flex justify-center items-center rounded-full gap-6">
             <div
                 className="cursor-pointer h-10 w-10 rounded-lg bg-red-500/90 flex justify-center items-center"
-                onClick={() =>
-                    canvasRef.current
-                        ?.getContext("2d")
-                        ?.clearRect(0, 0, window.innerWidth, window.innerHeight)
-                }
+                onClick={clearCanvas}
             >
                 <DeleteOutlineIcon />
             </div>
