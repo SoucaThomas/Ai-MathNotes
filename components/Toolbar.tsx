@@ -235,7 +235,13 @@ export default function Toolbar(props: {
         }}
         whileHover={{ scale: SCALE }}
       >
-        <Brush color={selectedId === 0 ? "#8a8a8a" : "white"} />
+        <Brush
+          color={
+            brush === BrushType.Pencil
+              ? darkenColor(currentSwatch, 0.4)
+              : currentSwatch
+          }
+        />
       </motion.div>
       <motion.div
         className="flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg"

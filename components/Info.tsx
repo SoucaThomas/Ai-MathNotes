@@ -31,12 +31,14 @@ export default function Info() {
               readable format.
             </DialogDescription>
             <DialogFooter>
-              <motion.h1 whileHover={{ scale: 1.1 }} className="flex gap-1">
-                Made by
-                <span>
-                  <GradientText>Thomas</GradientText>
-                </span>
-              </motion.h1>
+              <a href="https://soucathomas.tech">
+                <motion.h1 whileHover={{ scale: 1.1 }} className="flex gap-1">
+                  Made by
+                  <span>
+                    <GradientText>Thomas</GradientText>
+                  </span>
+                </motion.h1>
+              </a>
             </DialogFooter>
           </DialogContent>
         </Dialog>
