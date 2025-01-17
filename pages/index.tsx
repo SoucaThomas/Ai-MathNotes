@@ -22,6 +22,7 @@ export default function Home() {
         canvasRef={canvasRef}
         currentSwatch={currentSwatch}
         currentSize={currentSize}
+        brush={brush}
       />
       <Latex canvasRef={canvasRef} latex={latex} />
       {loading && (

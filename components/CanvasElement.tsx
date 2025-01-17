@@ -1,14 +1,17 @@
 import { useEffect, RefObject } from "react";
 import { Swatch } from "../utils/Swatch";
+import { BrushType } from "@/utils/BrushTypes";
 
 export default function CanvasElement(props: {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   currentSwatch: Swatch;
   currentSize: number;
+  brush: BrushType;
 }) {
-  const { canvasRef, currentSwatch, currentSize } = props;
+  const { canvasRef, currentSwatch, currentSize, brush } = props;
   const ongoingTouches: { identifier: number; pageX: number; pageY: number }[] =
     [];
+  const eraserWidth = 30;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,11 +61,17 @@ export default function CanvasElement(props: {
         ctx.beginPath();
         ctx.moveTo(x, y);
       } else {
-        ctx.lineTo(x, y);
-        ctx.strokeStyle = currentSwatch;
-        ctx.lineWidth = currentSize;
+        if (brush === BrushType.Pencil) {
+          ctx.globalCompositeOperation = "source-over";
+          ctx.strokeStyle = currentSwatch;
+          ctx.lineWidth = currentSize;
+        } else {
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.lineWidth = eraserWidth;
+        }
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
+        ctx.lineTo(x, y);
         ctx.stroke();
       }
     };
@@ -86,8 +95,14 @@ export default function CanvasElement(props: {
       for (let i = 0; i < touches.length; i++) {
         ongoingTouches.push(copyTouch(touches[i]));
         ctx.beginPath();
-        ctx.fillStyle = currentSwatch;
-        ctx.lineWidth = 4;
+        if (brush === BrushType.Pencil) {
+          ctx.globalCompositeOperation = "source-over";
+          ctx.strokeStyle = currentSwatch;
+          ctx.lineWidth = currentSize;
+        } else {
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.lineWidth = eraserWidth;
+        }
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.fill();
@@ -105,8 +120,14 @@ export default function CanvasElement(props: {
           ctx.beginPath();
           ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
           ctx.lineTo(touches[i].pageX, touches[i].pageY);
-          ctx.lineWidth = currentSize;
-          ctx.strokeStyle = currentSwatch;
+          if (brush === BrushType.Pencil) {
+            ctx.globalCompositeOperation = "source-over";
+            ctx.strokeStyle = currentSwatch;
+            ctx.lineWidth = currentSize;
+          } else {
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.lineWidth = eraserWidth;
+          }
           ctx.lineCap = "round";
           ctx.lineJoin = "round";
           ctx.stroke();
@@ -124,8 +145,14 @@ export default function CanvasElement(props: {
         const idx = ongoingTouchIndexById(touches[i].identifier);
 
         if (idx >= 0) {
-          ctx.lineWidth = 4;
-          ctx.fillStyle = currentSwatch;
+          if (brush === BrushType.Pencil) {
+            ctx.globalCompositeOperation = "source-over";
+            ctx.strokeStyle = currentSwatch;
+            ctx.lineWidth = currentSize;
+          } else {
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.lineWidth = eraserWidth;
+          }
           ctx.beginPath();
           ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
           ctx.lineTo(touches[i].pageX, touches[i].pageY);
@@ -182,8 +209,10 @@ export default function CanvasElement(props: {
   }, [canvasRef, currentSwatch, currentSize, ongoingTouches]);
 
   return (
-    <>
-      <canvas ref={canvasRef} style={{ cursor: "crosshair" }} />
-    </>
+    <canvas
+      ref={canvasRef}
+      style={{ cursor: "crosshair" }}
+      className="bg-[--var-background]"
+    />
   );
 }

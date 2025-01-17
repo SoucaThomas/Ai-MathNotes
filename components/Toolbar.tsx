@@ -1,5 +1,5 @@
 import { Trash2, Check, Palette, Brush, Eraser } from "lucide-react";
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useState } from "react";
 import { Swatch } from "../utils/Swatch";
 import axios from "axios";
 import { useToast } from "@/hooks/useToast";
@@ -187,41 +187,45 @@ export default function Toolbar(props: {
         }}
         whileHover={{ scale: SCALE }}
       >
-        <DropdownMenu open={openBrushPC} onOpenChange={setOpenBrushPC}>
-          <DropdownMenuTrigger asChild>
-            <div onClick={() => setBrush(BrushType.Pencil)}>
-              <Brush
-                color={
-                  brush === BrushType.Pencil
-                    ? darkenColor(currentSwatch, 0.4)
-                    : currentSwatch
-                }
-              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" className="w-[240px]">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>
-                <h1>
-                  Choose the brush Size <span>{currentSize}px</span>
-                </h1>
-              </DropdownMenuLabel>
-
-              <DropdownMenuItem>
-                <input
-                  type="range"
-                  min={1}
-                  max={40}
-                  value={currentSize}
-                  onChange={(event) =>
-                    setCurrentSize(Number(event.target.value))
+        {brush === BrushType.Pencil ? (
+          <DropdownMenu open={openBrushPC} onOpenChange={setOpenBrushPC}>
+            <DropdownMenuTrigger asChild>
+              <div onClick={() => setBrush(BrushType.Pencil)}>
+                <Brush
+                  color={
+                    brush === BrushType.Pencil
+                      ? darkenColor(currentSwatch, 0.4)
+                      : currentSwatch
                   }
-                  className="color-zinc-200 w-full accent-white"
                 />
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-[240px]">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>
+                  <h1>
+                    Choose the brush Size <span>{currentSize}px</span>
+                  </h1>
+                </DropdownMenuLabel>
+
+                <DropdownMenuItem>
+                  <input
+                    type="range"
+                    min={1}
+                    max={40}
+                    value={currentSize}
+                    onChange={(event) =>
+                      setCurrentSize(Number(event.target.value))
+                    }
+                    className="color-zinc-200 w-full accent-white"
+                  />
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Brush color={"white"} onClick={toggleBrush} />
+        )}
       </motion.div>
 
       <motion.div
