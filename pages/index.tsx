@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import CanvasElement from "@/components/CanvasElement";
 import Toolbar from "@/components/Toolbar";
+import Info from "@/components/Info";
 import { Swatch } from "@/utils/Swatch";
 import { Toaster } from "@/components/ui/toaster";
 import { Spinner } from "@/components/ui/spinner";
@@ -17,6 +18,7 @@ export default function Home() {
 
   return (
     <>
+      <Info />
       <Toaster />
       <CanvasElement
         canvasRef={canvasRef}
