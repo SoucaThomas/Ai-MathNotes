@@ -14,6 +14,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { darkenColor } from "@/utils/colorUtils";
+import { BrushType } from "@/utils/BrushTypes";
+
 const SCALE = 1.2;
 
 export default function Toolbar(props: {
@@ -24,6 +27,8 @@ export default function Toolbar(props: {
   setCurrentSize: (size: number) => void;
   setLoading: (loading: boolean) => void;
   setLatex: (latex: string) => void;
+  brush: BrushType;
+  setBrush: (brush: BrushType) => void;
 }) {
   const {
     canvasRef,
@@ -33,6 +38,8 @@ export default function Toolbar(props: {
     setCurrentSize,
     setLoading,
     setLatex,
+    brush,
+    setBrush,
   } = props;
 
   const { toast } = useToast();
@@ -82,9 +89,13 @@ export default function Toolbar(props: {
     setLatex("");
   };
 
-  useEffect(() => {
-    console.log(selectedId);
-  }, [selectedId]);
+  const toggleBrush = () => {
+    if (brush === BrushType.Pencil) {
+      setBrush(BrushType.Eraser);
+    } else {
+      setBrush(BrushType.Pencil);
+    }
+  };
 
   return (
     <motion.div
@@ -178,8 +189,14 @@ export default function Toolbar(props: {
       >
         <DropdownMenu open={openBrushPC} onOpenChange={setOpenBrushPC}>
           <DropdownMenuTrigger asChild>
-            <div>
-              <Brush color={currentSwatch} />
+            <div onClick={() => setBrush(BrushType.Pencil)}>
+              <Brush
+                color={
+                  brush === BrushType.Pencil
+                    ? darkenColor(currentSwatch, 0.4)
+                    : currentSwatch
+                }
+              />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-[240px]">
@@ -220,10 +237,12 @@ export default function Toolbar(props: {
         className="flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg"
         onClick={() => {
           setSelectedId(1);
+
+          toggleBrush();
         }}
         whileHover={{ scale: SCALE }}
       >
-        <Eraser color={selectedId === 1 ? "#8a8a8a" : "white"} />
+        <Eraser color={brush === BrushType.Eraser ? "#8a8a8a" : "white"} />
       </motion.div>
 
       <motion.div

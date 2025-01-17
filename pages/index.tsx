@@ -5,11 +5,13 @@ import { Swatch } from "@/utils/Swatch";
 import { Toaster } from "@/components/ui/toaster";
 import { Spinner } from "@/components/ui/spinner";
 import Latex from "@/components/Latex";
+import { BrushType } from "@/utils/BrushTypes";
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentSwatch, setCurrentSwatch] = useState<Swatch>(Swatch.White);
   const [currentSize, setCurrentSize] = useState<number>(5);
+  const [brush, setBrush] = useState<BrushType>(BrushType.Pencil);
   const [loading, setLoading] = useState<boolean>(false);
   const [latex, setLatex] = useState<string>("");
 
@@ -37,6 +39,8 @@ export default function Home() {
         setCurrentSize={setCurrentSize}
         setLoading={setLoading}
         setLatex={setLatex}
+        brush={brush}
+        setBrush={setBrush}
       />
     </>
   );
