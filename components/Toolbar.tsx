@@ -10,6 +10,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -35,8 +36,9 @@ export default function Toolbar(props: {
   } = props;
 
   const { toast } = useToast();
-  const [selectedId, setSelectedId] = useState(-1);
+  const [selectedId, setSelectedId] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openBrushPC, setOpenBrushPC] = useState(false);
 
   const handleSubmint = async () => {
     setLoading(true);
@@ -52,7 +54,7 @@ export default function Toolbar(props: {
 
     if (response.error) {
       toast({
-        variant: "destructive",
+        variant: "default",
         title: "Uh oh! Something went wrong.",
         description: response.message,
       });
@@ -64,7 +66,7 @@ export default function Toolbar(props: {
       setLatex(response[0].result.toString());
     } else
       toast({
-        variant: "destructive",
+        variant: "default",
         title: "Uh oh! Something went wrong.",
         description:
           "Unable to solve the given input. Please check the format or content of the problem.",
@@ -86,7 +88,7 @@ export default function Toolbar(props: {
 
   return (
     <motion.div
-      className="absolute inset-x-0 bottom-0 m-6 mx-auto flex h-16 w-2/3 items-center justify-center gap-3 rounded-full bg-zinc-900 md:gap-6"
+      className="absolute inset-x-0 bottom-0 m-6 mx-auto flex h-16 w-80 max-w-2xl items-center justify-center gap-3 rounded-full bg-zinc-900 md:w-5/6 md:gap-6"
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -104,7 +106,7 @@ export default function Toolbar(props: {
           <motion.div
             className={`${
               currentSwatch === swatch ? "border-2" : ""
-            } h-4 w-4 cursor-pointer rounded-lg`}
+            } aspect-square h-6 cursor-pointer rounded-lg`}
             style={{ backgroundColor: swatch }}
             key={swatch}
             onClick={() => setCurrentSwatch(swatch)}
@@ -122,56 +124,106 @@ export default function Toolbar(props: {
       >
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
-            <div onClick={() => setSelectedId(0)}>
-              <Palette />
+            <div>
+              <Palette color={currentSwatch} />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" className="w-[2rem]">
-            <DropdownMenuLabel>Colors</DropdownMenuLabel>
+          <DropdownMenuContent align="center" className="w-[240px]">
+            <DropdownMenuLabel>Choose a color</DropdownMenuLabel>
             <DropdownMenuGroup>
-              {Object.values(Swatch).map((swatch) => (
-                <DropdownMenuItem key={swatch}>
-                  <button
-                    className={`${
-                      currentSwatch === swatch ? "border-2" : ""
-                    } h-5 w-10 cursor-pointer rounded-lg`}
-                    style={{ backgroundColor: swatch }}
-                    key={swatch}
-                    onClick={() => setCurrentSwatch(swatch)}
-                  ></button>
-                </DropdownMenuItem>
-              ))}
+              <div className="overflox-hidden grid grid-cols-4 gap-2">
+                {Object.values(Swatch).map((swatch) => (
+                  <DropdownMenuItem key={swatch}>
+                    <button
+                      className={`${
+                        currentSwatch === swatch ? "border-2" : ""
+                      } aspect-square h-10 cursor-pointer rounded-lg`}
+                      style={{ backgroundColor: swatch }}
+                      key={swatch}
+                      onClick={() => setCurrentSwatch(swatch)}
+                    ></button>
+                  </DropdownMenuItem>
+                ))}
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>
+                <h1>
+                  Choose the brush Size <span>{currentSize}px</span>
+                </h1>
+              </DropdownMenuLabel>
+
+              <DropdownMenuItem>
+                <input
+                  type="range"
+                  min={1}
+                  max={40}
+                  value={currentSize}
+                  onChange={(event) =>
+                    setCurrentSize(Number(event.target.value))
+                  }
+                  className="color-zinc-200 w-full accent-white"
+                />
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </motion.div>
 
       <motion.div
-        className="flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg md:hidden"
+        className="hidden aspect-square h-8 cursor-pointer items-center justify-center rounded-lg md:flex md:h-10"
+        onClick={() => {
+          setSelectedId(0);
+        }}
+        whileHover={{ scale: SCALE }}
+      >
+        <DropdownMenu open={openBrushPC} onOpenChange={setOpenBrushPC}>
+          <DropdownMenuTrigger asChild>
+            <div>
+              <Brush color={currentSwatch} />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="w-[240px]">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>
+                <h1>
+                  Choose the brush Size <span>{currentSize}px</span>
+                </h1>
+              </DropdownMenuLabel>
+
+              <DropdownMenuItem>
+                <input
+                  type="range"
+                  min={1}
+                  max={40}
+                  value={currentSize}
+                  onChange={(event) =>
+                    setCurrentSize(Number(event.target.value))
+                  }
+                  className="color-zinc-200 w-full accent-white"
+                />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </motion.div>
+
+      <motion.div
+        className={`#{selectedId === 0 ? 'border-2' : ''} flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg md:hidden`}
+        onClick={() => {
+          setSelectedId(0);
+        }}
+        whileHover={{ scale: SCALE }}
+      >
+        <Brush color={selectedId === 0 ? "#8a8a8a" : "white"} />
+      </motion.div>
+      <motion.div
+        className="flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg"
         onClick={() => {
           setSelectedId(1);
         }}
         whileHover={{ scale: SCALE }}
       >
-        <Brush />
-      </motion.div>
-      <input
-        type="range"
-        min={1}
-        max={40}
-        value={currentSize}
-        onChange={(event) => setCurrentSize(Number(event.target.value))}
-        className="color-zinc-200 hidden accent-white md:block"
-      />
-
-      <motion.div
-        className="flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg"
-        onClick={() => {
-          setSelectedId(2);
-        }}
-        whileHover={{ scale: SCALE }}
-      >
-        <Eraser />
+        <Eraser color={selectedId === 1 ? "#8a8a8a" : "white"} />
       </motion.div>
 
       <motion.div
