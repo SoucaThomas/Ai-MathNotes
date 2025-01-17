@@ -43,7 +43,6 @@ export default function Toolbar(props: {
   } = props;
 
   const { toast } = useToast();
-  const [selectedId, setSelectedId] = useState(0);
   const [open, setOpen] = useState(false);
   const [openBrushPC, setOpenBrushPC] = useState(false);
 
@@ -128,9 +127,6 @@ export default function Toolbar(props: {
 
       <motion.div
         className="flex aspect-square h-8 cursor-pointer items-center justify-center rounded-lg md:hidden md:h-10"
-        onClick={() => {
-          setSelectedId(0);
-        }}
         whileHover={{ scale: SCALE }}
       >
         <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -182,9 +178,6 @@ export default function Toolbar(props: {
 
       <motion.div
         className="hidden aspect-square h-8 cursor-pointer items-center justify-center rounded-lg md:flex md:h-10"
-        onClick={() => {
-          setSelectedId(0);
-        }}
         whileHover={{ scale: SCALE }}
       >
         {brush === BrushType.Pencil ? (
@@ -230,9 +223,6 @@ export default function Toolbar(props: {
 
       <motion.div
         className={`#{selectedId === 0 ? 'border-2' : ''} flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg md:hidden`}
-        onClick={() => {
-          setSelectedId(0);
-        }}
         whileHover={{ scale: SCALE }}
       >
         <Brush
@@ -246,8 +236,6 @@ export default function Toolbar(props: {
       <motion.div
         className="flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-lg"
         onClick={() => {
-          setSelectedId(1);
-
           toggleBrush();
         }}
         whileHover={{ scale: SCALE }}
