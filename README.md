@@ -1,40 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+## Overview
 
-## Getting Started
+This application is a web-based drawing tool that allows users to create and manipulate drawings on a canvas. It includes various features such as different brush types, color swatches, and the ability to render LaTeX.
 
-First, run the development server:
+## Components
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### CanvasElement
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The `CanvasElement` component is responsible for rendering the canvas where users can draw. It takes the following props:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- `canvasRef`: A reference to the canvas element.
+- `currentSwatch`: The current color selected.
+- `currentSize`: The current brush size.
+- `brush`: The current brush type.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Toolbar
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+The `Toolbar` component provides the user interface for selecting different tools and settings for drawing. It takes the following props:
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `canvasRef`: A reference to the canvas element.
+- `currentSwatch`: The current color selected.
+- `setCurrentSwatch`: Function to update the current color.
+- `currentSize`: The current brush size.
+- `setCurrentSize`: Function to update the brush size.
+- `setLoading`: Function to set the loading state.
+- `setLatex`: Function to set the LaTeX string.
+- `brush`: The current brush type.
+- `setBrush`: Function to update the brush type.
 
-## Learn More
+### Info
 
-To learn more about Next.js, take a look at the following resources:
+The `Info` component displays information about the application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### Toaster
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The `Toaster` component is used to display toast notifications.
 
-## Deploy on Vercel
+### Spinner
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The `Spinner` component is used to display a loading spinner.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### Latex
+
+The `Latex` component renders LaTeX on the canvas. It takes the following props:
+
+- `canvasRef`: A reference to the canvas element.
+- `latex`: The LaTeX string to render.
+
+## State Management
+
+The main state variables used in the `Home` component are:
+
+- `canvasRef`: A reference to the canvas element.
+- `currentSwatch`: The current color selected.
+- `currentSize`: The current brush size.
+- `brush`: The current brush type.
+- `loading`: A boolean indicating whether the application is in a loading state.
+- `latex`: The LaTeX string to render.
+
+## Usage
+
+To use the application, simply interact with the toolbar to select different tools and settings, and draw on the canvas. The LaTeX component allows you to render mathematical expressions on the canvas.
